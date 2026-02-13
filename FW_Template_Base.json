@@ -1,0 +1,164 @@
+{
+  "name": "FW_Template_Base",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fw-template",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -544,
+        -16
+      ],
+      "id": "639bf116-75da-4690-8b12-83538b51f039",
+      "name": "Webhook",
+      "webhookId": "bca6ec77-9883-4c3d-8fce-01bcd71a7f8a"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://httpbin.org/post",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "username",
+              "value": "={{$json.username}}"
+            },
+            {
+              "name": "password",
+              "value": "={{$json.password}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        32,
+        -32
+      ],
+      "id": "4855e5ca-4c81-43c9-8842-e7ae24c49efd",
+      "name": "LOGIN"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c079a602-7039-4f1d-86c3-52341d6db66c",
+              "name": "ip_fw",
+              "value": "={{$json[\"body\"][\"ip_fw\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "e3068d4c-2d7e-45fc-8a92-ea137dba2852",
+              "name": "username",
+              "value": "={{$json[\"body\"][\"username\"]}}",
+              "type": "string"
+            },
+            {
+              "id": "698e3871-eebc-4b67-8a6c-1fdbae4b0a92",
+              "name": "password",
+              "value": "={{$json[\"body\"][\"password\"]}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -304,
+        -32
+      ],
+      "id": "db6a790b-26c4-49d0-bb33-21a9023b2119",
+      "name": "ordenar datos"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://httpbin.org/post",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "ip_fw",
+              "value": "={{$node[\"ordenar datos\"].json.ip_fw}}"
+            },
+            {
+              "name": "username",
+              "value": "={{$json.json.username}}"
+            },
+            {
+              "name": "password",
+              "value": "={{$json.json.password}}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "af36869d-5c29-43d9-bfb7-cc79ee94e509",
+      "name": "Accion"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "ordenar datos",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "LOGIN": {
+      "main": [
+        [
+          {
+            "node": "Accion",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ordenar datos": {
+      "main": [
+        [
+          {
+            "node": "LOGIN",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "fe57fb55-3878-4119-b0f5-22a958be97c2",
+  "meta": {
+    "instanceId": "a3936b5ed2b07597dee9e94261e019f092721cf18ad7fc82a4b4cde0a84cb5b3"
+  },
+  "id": "dqzJLY6T6BYESHEI",
+  "tags": []
+}
